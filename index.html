@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Günün Mübarək Bibi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #feada6, #f3a6c8);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .bg-bubble {
+            position: absolute; color: rgba(255, 71, 87, 0.35); font-size: 1.8rem; pointer-events: none;
+            bottom: -50px; animation: floatUp linear infinite; z-index: 1;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; }
+            100% { transform: translateY(-110vh) rotate(180deg) scale(0.5); opacity: 0; }
+        }
+
+        /* İlk Açılış Ekranı (SUPRIZZ) */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 100; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px);
+            transition: opacity 0.8s ease-out;
+        }
+
+        .surprizz-text {
+            font-size: 5.5rem; font-weight: 900; color: #d81b60;
+            text-shadow: 0 10px 30px rgba(216, 27, 96, 0.25);
+            background: linear-gradient(135deg, #bd0840 0%, #ff416c 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            z-index: 101;
+        }
+
+        /* Ana Tebrik Kartı Paneli */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5); padding: 55px 45px 75px 45px; /* Alt boşluk imza için dengelendi */
+            border-radius: 32px; box-shadow: 0 20px 50px rgba(243, 166, 200, 0.4);
+            text-align: center; max-width: 480px; width: 90%; z-index: 10;
+            position: relative; display: none; opacity: 0; transform: scale(0.8);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .around-emoji {
+            position: absolute; pointer-events: none; opacity: 0; z-index: 11;
+            animation: popIn 0.8s forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            100% { transform: scale(1) rotate(var(--rot)); opacity: 1; }
+        }
+
+        h1 {
+            color: #d81b60; font-size: 2.3rem; font-weight: 800; margin-bottom: 25px;
+            background: linear-gradient(135deg, #bd0840 0%, #ff416c 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        p { font-size: 1.2rem; line-height: 1.8; color: #4a4a4a; font-weight: 600; text-align: left; }
+
+        /* Sağ Alt El Yazısı İmza Alanı */
+        .signature {
+            position: absolute;
+            bottom: 20px;
+            right: 45px; /* Sol yerine sağ kenara hizalandı */
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #d81b60;
+            opacity: 0.85;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+        }
+
+        .party-element {
+            position: absolute; user-select: none; pointer-events: none;
+            top: -50px; animation: fall linear forwards; z-index: 15;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg) translateX(100px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-animation-container"></div>
+
+    <div id="splash-screen">
+        <div class="surprizz-text">SUPRIZZ</div>
+    </div>
+
+    <div class="glass-panel" id="main-panel">
+        <div id="birthday-card">
+            <h1>Ad Günün Mübarək Bibi</h1>
+            <p>
+                Salam bibi, ad günün mübarək <br><br>
+                Dünyanın ən yaxşı və ən gözəl bibisi, ürəyində nə arzu varsa, hamısı tezliklə yerinə yetsin. Üzün hər zaman gülsün<br><br>
+                Sağ ol, özünə yaxşı bax
+            </p>
+        </div>
+        <div class="signature">~zamiq</div>
+    </div>
+
+    <script>
+        const bgContainer = document.getElementById('bg-animation-container');
+        const bgItems = ['❤️', '💖', '✨', '💕'];
+        const emos = ['❤️', '💖', '🎂', '🎈', '🎉', '✨'];
+        
+        // Arka plan soft kalpler
+        for (let i = 0; i < 40; i++) {
+            let bubble = document.createElement('div');
+            bubble.classList.add('bg-bubble');
+            bubble.innerHTML = bgItems[Math.floor(Math.random() * bgItems.length)];
+            bubble.style.left = Math.random() * 100 + 'vw';
+            bubble.style.animationDuration = (Math.random() * 6 + 6) + 's';
+            bubble.style.animationDelay = Math.random() * 5 + 's';
+            bgContainer.appendChild(bubble);
+        }
+
+        // TAM VE EKSİKSİZ DOĞUM GÜNÜ MELODİSİ
+        function playCompleteSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                let now = ctx.currentTime;
+
+                function playNote(freq, start, duration, type = 'sine', volume = 0.12) {
+                    const osc = ctx.createOscillator();
+                    const gainNode = ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, start);
+                    gainNode.gain.setValueAtTime(volume, start);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, start + duration);
+                    osc.connect(gainNode);
+                    gainNode.connect(ctx.destination);
+                    osc.start(start);
+                    osc.stop(start + duration);
+                }
+
+                // Girişteki neşeli oyun kazanma jingle'ı
+                playNote(392.00, now, 0.08, 'triangle');       
+                playNote(523.25, now + 0.08, 0.08, 'triangle'); 
+                playNote(659.25, now + 0.16, 0.08, 'triangle'); 
+                playNote(783.99, now + 0.24, 0.2, 'sine');      
+                playNote(1046.50, now + 0.35, 0.5, 'sine');     
+
+                // Eksiksiz Happy Birthday Melodisi
+                const fullMelody = [
+                    {f: 261.63, d: 0.3}, {f: 261.63, d: 0.3}, {f: 293.66, d: 0.6}, {f: 261.63, d: 0.6}, {f: 349.23, d: 0.6}, {f: 329.63, d: 1.2},
+                    {f: 261.63, d: 0.3}, {f: 261.63, d: 0.3}, {f: 293.66, d: 0.6}, {f: 261.63, d: 0.6}, {f: 392.00, d: 0.6}, {f: 349.23, d: 1.2},
+                    {f: 261.63, d: 0.3}, {f: 261.63, d: 0.3}, {f: 523.25, d: 0.6}, {f: 440.00, d: 0.6}, {f: 349.23, d: 0.6}, {f: 329.63, d: 0.6}, {f: 293.66, d: 1.2},
+                    {f: 466.16, d: 0.3}, {f: 466.16, d: 0.3}, {f: 440.00, d: 0.6}, {f: 349.23, d: 0.6}, {f: 392.00, d: 0.6}, {f: 349.23, d: 1.2}
+                ];
+
+                let startMelody = now + 1.0;
+                fullMelody.forEach(n => {
+                    playNote(n.f, startMelody, n.d, 'sine', 0.08);
+                    startMelody += n.d + 0.05;
+                });
+
+            } catch(e) {
+                console.log("Ses motoru engellendi.");
+            }
+        }
+
+        function spawnConfetti() {
+            let p = document.createElement('div');
+            p.classList.add('party-element');
+            p.innerHTML = emos[Math.floor(Math.random() * emos.length)];
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            p.style.animationDuration = (Math.random() * 2.5 + 2.5) + 's';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 4000);
+        }
+
+        // Açılıştan itibaren sürekli akan konfeti yağmuru
+        setInterval(spawnConfetti, 150);
+
+        window.onload = function() {
+            playCompleteSound();
+
+            // TAM 3 SANİYE SONRA splash ekranı kapanır, yazı paneli gelir
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                
+                setTimeout(() => {
+                    document.getElementById('splash-screen').style.display = 'none';
+                    
+                    const panel = document.getElementById('main-panel');
+                    panel.style.display = 'block';
+                    setTimeout(() => {
+                        panel.style.opacity = '1';
+                        panel.style.transform = 'scale(1)';
+                        setupAroundEmojis();
+                    }, 50);
+                }, 800);
+            }, 3000);
+        };
+
+        document.body.addEventListener('click', () => {
+            playCompleteSound();
+        }, { once: true });
+
+        function setupAroundEmojis() {
+            const panel = document.getElementById('main-panel');
+            for (let i = 0; i < 28; i++) {
+                let e = document.createElement('div');
+                e.classList.add('around-emoji');
+                e.innerHTML = emos[Math.floor(Math.random() * emos.length)];
+                e.style.setProperty('--rot', (Math.random() * 40 - 20) + 'deg');
+                e.style.fontSize = (Math.random() * 10 + 20) + 'px';
+                
+                let side = i % 4;
+                if(side==0) { e.style.top = '-15px'; e.style.left = (Math.random()*100)+'%'; }
+                else if(side==1) { e.style.right = '-15px'; e.style.top = (Math.random()*100)+'%'; }
+                else if(side==2) { e.style.bottom = '-15px'; e.style.left = (Math.random()*100)+'%'; }
+                else { e.style.left = '-15px'; e.style.top = (Math.random()*100)+'%'; }
+                
+                panel.appendChild(e);
+            }
+            const aroundEmojis = document.querySelectorAll('.around-emoji');
+            aroundEmojis.forEach(emoji => emoji.style.display = 'block');
+        }
+    </script>
+</body>
+</html>
